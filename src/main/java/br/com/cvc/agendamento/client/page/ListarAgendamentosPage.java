@@ -2,6 +2,7 @@ package br.com.cvc.agendamento.client.page;
 
 import br.com.cvc.agendamento.client.AgendamentosService;
 import br.com.cvc.agendamento.client.AgendamentosServiceAsync;
+import br.com.cvc.agendamento.client.Messages;
 import br.com.cvc.agendamento.dto.ConsultaAgendamentosDTO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -11,19 +12,26 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 import java.math.BigDecimal;
 
+/**
+ * Página Listar Agendamentos
+ */
 public class ListarAgendamentosPage {
 
-    private static final String MOEDA = "R$ ";
-
+    private final Messages messages = GWT.create(Messages.class);
     private ConsultaAgendamentosDTO dto;
 
-    private AsyncCallback<ConsultaAgendamentosDTO> callbackListarAgendamentos;
-
+    /**
+     * Carrega dados ao abrir a página.
+     */
     public void carregarPagina() {
-        callbackListarAgendamentos = getCallbackListarAgendamentos();
-        getAgendamentosService().listarAgendamentos(callbackListarAgendamentos);
+        getAgendamentosService().listarAgendamentos(getCallbackListarAgendamentos());
     }
 
+    /**
+     * Callback GWT.
+     *
+     * @return
+     */
     public AsyncCallback<ConsultaAgendamentosDTO> getCallbackListarAgendamentos() {
         return new AsyncCallback<ConsultaAgendamentosDTO>() {
 
@@ -71,18 +79,18 @@ public class ListarAgendamentosPage {
 
                             BigDecimal valor = new BigDecimal(dto.getAgendamentos().get(i).getValor());
                             valor = valor.setScale(2, BigDecimal.ROUND_UP);
-                            flexTable.setHTML(i + 1, 2, MOEDA + valor.toString());
+                            flexTable.setHTML(i + 1, 2, messages.msgSimboloMoedaReal() + valor.toString());
                             flexTable.getFlexCellFormatter().setStyleName(i, 2, "table-agendamentos-col-estilo");
 
-                            flexTable.setHTML(i + 1, 3, MOEDA + dto.getAgendamentos().get(i).getDataTransferencia().toString());
+                            flexTable.setHTML(i + 1, 3, messages.msgSimboloMoedaReal() + dto.getAgendamentos().get(i).getDataTransferencia().toString());
                             flexTable.getFlexCellFormatter().setStyleName(i, 3, "table-agendamentos-col-estilo");
 
-                            flexTable.setHTML(i + 1, 4, MOEDA + dto.getAgendamentos().get(i).getDataAgendamento().toString());
+                            flexTable.setHTML(i + 1, 4, messages.msgSimboloMoedaReal() + dto.getAgendamentos().get(i).getDataAgendamento().toString());
                             flexTable.getFlexCellFormatter().setStyleName(i, 4, "table-agendamentos-col-estilo");
 
                             BigDecimal taxa = new BigDecimal(dto.getAgendamentos().get(i).getTaxa());
                             taxa = taxa.setScale(2, BigDecimal.ROUND_UP);
-                            flexTable.setHTML(i + 1, 5, MOEDA + taxa.toString());
+                            flexTable.setHTML(i + 1, 5, messages.msgSimboloMoedaReal() + taxa.toString());
                             flexTable.getFlexCellFormatter().setStyleName(i, 5, "table-agendamentos-col-estilo");
                         }
                     }
@@ -97,6 +105,11 @@ public class ListarAgendamentosPage {
         };
     }
 
+    /**
+     * Geração do serviço Async através do proxy GWT.
+     *
+     * @return
+     */
     private static AgendamentosServiceAsync getAgendamentosService() {
         return GWT.create(AgendamentosService.class);
     }

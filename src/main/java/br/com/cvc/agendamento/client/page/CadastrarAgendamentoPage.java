@@ -14,17 +14,25 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.datepicker.client.DateBox;
 
+/**
+ * Página Cadastrar Agendamentos
+ */
 public class CadastrarAgendamentoPage {
 
     private static final String MOEDA = "R$ ";
 
-    private AsyncCallback<Void> callbackCadastrarAgendamento;
-
-
+    /**
+     * Carrega dados ao abrir a página.
+     */
     public void carregarPagina() {
-        onLoadCadastroAgendamentosPage();
+        onLoadPage();
     }
 
+    /**
+     * Callback GWT.
+     *
+     * @return
+     */
     public static AgendamentosServiceAsync getAgendamentosService() {
         return GWT.create(AgendamentosService.class);
     }
@@ -44,7 +52,7 @@ public class CadastrarAgendamentoPage {
         };
     }
 
-    private void onLoadCadastroAgendamentosPage() {
+    private void onLoadPage() {
         // Conta Origem
         HTMLPanel contaOrigemLabel = new HTMLPanel("label", "Conta Origem");
         contaOrigemLabel.addStyleName("control-label");
@@ -170,8 +178,7 @@ public class CadastrarAgendamentoPage {
                     dto.setValor(Double.valueOf(valorInput.getText()));
                     dto.setDataTransferencia(dateBox.getTextBox().getText());
 
-                    callbackCadastrarAgendamento = getCallbackCadastrarAgendamento();
-                    getAgendamentosService().incluirAgendamento(dto, callbackCadastrarAgendamento);
+                    getAgendamentosService().incluirAgendamento(dto, getCallbackCadastrarAgendamento());
                     limparDadosCadastroAgendamentosPage(contaOrigemInput, contaDestinoInput, valorInput, dateBox);
                 } else {
                     Window.alert("Dados inválidos. Preencha todos os campos corretamente.");
@@ -183,6 +190,14 @@ public class CadastrarAgendamentoPage {
         ScriptInjector.fromUrl("static/javascripts/brewer.js").inject();
     }
 
+    /**
+     * Limpa os campos na tela de cadastro.
+     *
+     * @param contaOrigemInput
+     * @param contaDestinoInput
+     * @param valorInput
+     * @param dateBox
+     */
     private void limparDadosCadastroAgendamentosPage(IntegerBox contaOrigemInput, IntegerBox contaDestinoInput, TextBox valorInput, DateBox dateBox) {
         contaOrigemInput.setText("");
         contaDestinoInput.setText("");
